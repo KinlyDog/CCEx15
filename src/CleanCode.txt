@@ -1,0 +1,216 @@
+1. Пояснение к коду
+
+        // сортируем массив по возрастанию
+        boolean isSorted = false;
+        while (!isSorted) {
+            isSorted = true;
+
+            for (int i = 0; i < n - 1; i++) {
+                if (digitsArray[i + 1] < digitsArray[i]) {
+                    int t = digitsArray[i];
+
+                    digitsArray[i] = digitsArray[i + 1];
+                    digitsArray[i + 1] = t;
+
+                    isSorted = false;
+                }
+            }
+        }
+
+2. Пояснение к коду
+
+        // сортируем массив, максимальное число в центре
+        // слева от максимального сортировка по возрастанию
+        // справа по убыванию
+        for (int i = 0; i < n / 3; i++) {
+            int t = digitsArray[n / 2 + i];
+
+            digitsArray[n / 2 + i] = digitsArray[n - 1 - i];
+            digitsArray[n - 1 - i] = t;
+        }
+
+3. Пояснение к коду
+
+        // сортируем массивы по возрастанию
+        boolean isSorted = false;
+        while (!isSorted) {
+            isSorted = true;
+
+            for (int i = 0; i < n - 1; i++) {
+                if (listEmployeesIdTemp[i + 1] < listEmployeesIdTemp[i]) {
+                    int t = listEmployeesIdTemp[i];
+
+                    listEmployeesIdTemp[i] = listEmployeesIdTemp[i + 1];
+                    listEmployeesIdTemp[i + 1] = t;
+
+                    isSorted = false;
+                }
+
+                if (listSalariesTemp[i + 1] < listSalariesTemp[i]) {
+                    int t = listSalariesTemp[i];
+
+                    listSalariesTemp[i] = listSalariesTemp[i + 1];
+                    listSalariesTemp[i + 1] = t;
+
+                    isSorted = false;
+                }
+            }
+        }
+
+4. Пояснение к коду
+
+        // создаем временные копии массивов для работы
+        int[] listEmployeesIdTemp = new int[n];
+        int[] listSalariesTemp = new int[n];
+        System.arraycopy(ids, 0, listEmployeesIdTemp, 0, n);
+        System.arraycopy(salary, 0, listSalariesTemp, 0, n);
+
+5. Пояснение к коду
+
+        // синхронизируем таблицы
+        int[] orderedListSalaries = new int[n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (ids[i] == listEmployeesIdTemp[j]) {
+                    orderedListSalaries[i] = listSalariesTemp[j];
+                    break;
+                }
+            }
+        }
+
+6. Пояснение к коду
+
+        // нумеруем ячейки матриц
+        // в первой матрице нумерация последовательная (слева направо, снизу вверх)
+        // во второй нумерация задана условием задачи
+        for (int i = 0; i < SQUARE_SIDE; i++) {
+            for (int j = 0; j < SQUARE_SIDE; j++) {
+                squareNormal[i][j] = index++;
+
+                if (j == 0) {
+                    squareOriginal[i][j] = 6 - i;
+                }
+
+                if (j == 1) {
+                    squareOriginal[i][j] = 1 + i;
+                }
+
+                if (j == 2) {
+                    squareOriginal[i][j] = 9 - i;
+                }
+            }
+        }
+
+7. Пояснение к коду
+
+        // считываем код разблокировки для исходной матрицы
+        // на основании этого, переносим код разблокировки на последовательно пронумерованную матрицу
+        int[] hitsSeqNum = new int[n];
+        while (index < n) {
+
+            for (int i = 0; i < t; i++) {
+                for (int j = 0; j < t; j++) {
+                    if (hits[index] == square[i][j]) {
+                        hitsSeqNum[index] = squareSeqNum[i][j];
+                        break;
+                    }
+                }
+            }
+
+            index++;
+        }
+
+8. Пояснение к коду
+
+        // вычисляем длину линии разблокировки
+        final double HYPOTENUSE = Math.sqrt(2);
+        double unlockLineLength = 0;
+        for (int i = 0; i < n - 1; i++) {
+            if ((hitsSeqNum[i] + hitsSeqNum[i + 1]) % 2 == 0) {
+                unlockLineLength += HYPOTENUSE;
+            } else {
+                unlockLineLength += 1;
+            }
+        }
+
+        // получаем длину линии (код разблокировки) с точностью до 5 знаков после запятой
+        if (unlockLineLength > (int) unlockLineLength) {
+            unlockLineLength = Math.round(unlockLineLength * 100_000);
+        }
+
+        String unlockCode = String.valueOf((int) unlockLineLength);
+
+        if (!unlockCode.contains("0")) {
+            return unlockCode;
+        }
+
+        // исключаем все нули из кода разблокировки
+        String unlockCode2 = "";
+        for (int i = 0; i < unlockCode.length(); i++) {
+            if (unlockCode.charAt(i) != '0') {
+                unlockCode2 += unlockCode.charAt(i);
+            }
+        }
+
+9. Пояснение к коду
+
+        // производим разбивку строк по заданной ширине
+        // если строка больше заданной ширины, разделяем строку пробелами
+        StringBuilder tempString = new StringBuilder();
+        for (int i = 0; i < WORD_COUNT; i++) {
+            while (wordsFromString[i].equals("")) {
+                i++;
+            }
+
+            while (wordsFromString[i].length() > len) {
+                tempString.append(wordsFromString[i], 0, len).append(" ");
+                wordsFromString[i] = wordsFromString[i].substring(len);
+            }
+
+            tempString.append(wordsFromString[i]);
+
+            if (i < WORD_COUNT - 1) {
+                tempString.append(" ");
+            }
+        }
+
+        // строка со словами не более заданной длины
+        String splitString = tempString.toString();
+
+        final int LIMITED_ROWS_LENGTH = splitString.length() / (len / 2) + 1;
+        String[] limitedRows = new String[LIMITED_ROWS_LENGTH];
+
+        // получаем массив строк заданной длинны
+        int stringNumber = 0;
+        while (splitString.length() != 0) {
+            int ind = splitString.lastIndexOf(' ', len - 1);
+            int sLen = splitString.length();
+
+            if (sLen <= len) {
+                limitedRows[stringNumber] = splitString.substring(0, sLen);
+                splitString = splitString.substring(sLen);
+            }
+
+            else if (splitString.charAt(len) == ' ') {
+                limitedRows[stringNumber] = splitString.substring(0, len);
+                splitString = splitString.substring(len + 1);
+            }
+
+            else if (ind != -1) {
+                limitedRows[stringNumber] = splitString.substring(0, ind);
+                splitString = splitString.substring(ind + 1);
+            }
+
+            stringNumber++;
+        }
+
+        // создаем массив-маску для проверки
+        // проверяем наличие искомого слова в строках
+        int[] checkInKey = new int[stringNumber];
+        for (int i = 0; i < checkInKey.length; i++) {
+            if (limitedRows[i].matches("(?s).*\\b" + subs + "\\b.*")) {
+                checkInKey[i] = 1;
+            } else {
+                checkInKey[i] = 0;
+            }
+        }
